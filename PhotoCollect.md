@@ -3,7 +3,7 @@
 * Updated July 10, 2023
 
 ## Summary
-The Photo Collector is an application program that searches for photo and video files under specific paths, collects file files, and stores the unique files in a "collections" folder. The Collector function is a part of a "Photo Manager" utility that further processes the collected files. As development of other parts of the PhotoManager evolve, those parts may be incorporated into a single application, but that is yet to be determined. 
+The Photo Collector is an application program that searches for photo and video files under specific paths, collects image files, and stores the unique files in a "collections" folder. The Collector function is a part of a "Photo Manager" utility that further processes the collected files. As development of other parts of the PhotoManager evolve, those parts may be incorporated into a single application, but that is yet to be determined. 
 ## Background
 In my environment, I have photo and video files scattered in various systems and media. Often, that scattering is more of a redistribution of files from one form to another, without deletion of the source files. For example, Files are uploaded from a camera SD card to a PC storage, some files may be duplicated for whatever reason without change and placed in other folders, then folders of files are automatically uploaded to the cloud (Google photo storage or Apple cloud)--later, those cloud files are brought back to earth in another PC folder. Thus, a file can be found on many folders on several PCs.
 
@@ -53,7 +53,7 @@ The development of the Photo Collector program ("COL") will be performed in stag
 * The expectation is that only one test module is developed for the testing of the PhotoCollector program; each stage adds test cases.
 * The test module will setup its testing environment from scratch (i.e., no reliance on previous setup).
 * A github repository is used to hold developed sources: https://github.com/syntheny/PhotoManager
-* The end of each stage will assure the source and tests are committed to the repository.
+* The end of each stage will assure the source and tests are committed to the repository, using the "Stage_number_stage_title" as the branch name.
 * Stages as expected at kick-off:
     1. Handling PhotoCollector as both a library and program
     2. Command line parsing for path argument
@@ -78,6 +78,10 @@ The development of the Photo Collector program ("COL") will be performed in stag
         * Clean up interim states
         * But do not remove artifacts from testing that might help in 
           diagnosing problems
+        ### Test Results
+        * Report approximate time to develop and test this stage
+        * Report any note-worthy results from succcessful testing
+        * Keep any test reports of intermittent failure (also report through Jira)
 ```
 
 ## Stage 1 -- Structure of PhotoCollector
@@ -85,12 +89,22 @@ The development of the Photo Collector program ("COL") will be performed in stag
 * This stage also allows the exploration of how to test COL, including setup of test environment that may be required for each stage.
 * The COL module is expected to be both an import as a library and callable as a system program.
 * What is expected is that a command line parsing scheme is developed (testing of the parsing is performed in another test stage).
-* The GitHub structure is also established in this stage.
 
 ### Test Cases
 1. Import PhotoCollector library
 2. Import PhotoCollector library and create instance of related object
 3. Use Python subprocess call methods to invoke PhotoCollector as an application
+
+### Test Results
+* Elapsed time: 30 minutes
+* Created a class for this specific stage. Multiple test classes are envisioned to handle each stage.
+* A common class "CommonTest" will inherit unittest.TestCase, and all other test classes will inherit CommonTest. This will permit definition of a common setUp method.
+* Test run results:
+```
+        test_collector_import_class (__main__.TestCollectStructure.test_collector_import_class) ... ok
+        test_collector_library (__main__.TestCollectStructure.test_collector_library) ... ok
+        test_collector_program (__main__.TestCollectStructure.test_collector_program) ... ok
+```
 
 ## Stage 2 -- Command line 
 * This stage is not concerned with command line options, except one or more arguments to specify folder paths. 
