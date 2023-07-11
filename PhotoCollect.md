@@ -64,6 +64,9 @@ The development of the Photo Collector program ("COL") will be performed in stag
 ```
         ## Stage N -- title
         * Stage description/summary points
+        ### Stage Preparation
+        * Specify any instructions with respect to development, such as 
+          one-time-only generation of test data which is added to the repository.
         ### Test Setup
         * Itemized list of what needs to be set up for the stage
         * Note that a stage is an addition of test cases to existing 
@@ -79,10 +82,15 @@ The development of the Photo Collector program ("COL") will be performed in stag
         * But do not remove artifacts from testing that might help in 
           diagnosing problems
         ### Test Results
-        * Report approximate time to develop and test this stage
-        * Report any note-worthy results from succcessful testing
-        * Keep any test reports of intermittent failure (also report through Jira)
-```
+        * Do not actually add test results here, but use this markdown link, keyed to the stage number:
+            [Stage N Test Results](TestResults/stageN.md)
+        * Create a "stageN.md" text file under TestResults folder to report testing results for stage N
+ ```
+* When a test/development stage is complete, create a separate reporting file, with the stage number in the name, under "TestResults" folder in the repository. This file and related files generated during testing should be included when the stage branch is checked in.
+* Information to include in the rest results report file are:
+    - Report approximate time to develop and test this stage
+    - Report any note-worthy results from succcessful testing
+    - Keep any test reports of intermittent failure (also report through Jira)
 
 ## Stage 1 -- Structure of PhotoCollector
 * This stage allows the development of the PhotoCollector (COL) source structure on which all other test cases are based.
@@ -95,31 +103,26 @@ The development of the Photo Collector program ("COL") will be performed in stag
 2. Import PhotoCollector library and create instance of related object
 3. Use Python subprocess call methods to invoke PhotoCollector as an application
 
-### Test Results
-* Elapsed time: 30 minutes
-* Created a class for this specific stage. Multiple test classes are envisioned to handle each stage.
-* A common class "CommonTest" will inherit unittest.TestCase, and all other test classes will inherit CommonTest. This will permit definition of a common setUp method.
-* Test run results:
-```
-        test_collector_import_class (__main__.TestCollectStructure.test_collector_import_class) ... ok
-        test_collector_library (__main__.TestCollectStructure.test_collector_library) ... ok
-        test_collector_program (__main__.TestCollectStructure.test_collector_program) ... ok
-```
-
 ## Stage 2 -- Command line 
 * This stage is not concerned with command line options, except one or more arguments to specify folder paths. 
 * It tests the ability of the program to locate photo files in one or more existing folders, including nested folders. 
 * This stage is not concerned with file content, only the file extension as it indicates an image or video file.
+* Because the collect.py may be either an imported library or a free-standing program, the command line test cases must cover both modes.
+
+### Stage Preparation
+* Create a TestData folder under the repository and add image files and video files. Names should indicate size and other relevant image characteristics.
 
 ### Test Setup
-* Create folders and copy existing files into folders, as directed below:
+* Create folders and copy existing files from testData into folders, as directed below:
     1. Folder C:\Photo\Tests\test_folder0 -- empty
     2. Folder C:\Photo\Tests\test_folder1 -- contains one file with ".txt" extension
     3. Folder C:\Photo\Tests\test_folder2 -- contains one file with ".jpg" suffix
     4. Folder C:\Photo\Tests\test_folder3 -- contains multiple files with all supported extensions
     5. Folder C:\Photo\Tests\test_folder4 -- contains multiple files with all supported extensions; also contains a folder "subfolder" having multiple files of all supported extensions
-* Each test case simulates the invocation of the PhotoCollector program by importing 
+
 ### Test Cases
+The following test cases have two variations: passig the command line to the imported library and to a free-standing program. A "common test case" scheme is used whereby a test case for library mode and a test case for program mode call upon a common method to perform the test.
+* Common test cases
 * Command line: no arguments
     - expect in-and-out, no failure
 * Command line: one valid folder path
