@@ -1,0 +1,183 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>PhotoCollect.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="photo-collector">Photo Collector</h1>
+    <ul>
+      <li>Started July 10, 2023</li>
+      <li>Updated July 10, 2023</li>
+    </ul>
+    <h2 id="summary">Summary</h2>
+    <p>The Photo Collector is an application program that searches for photo and video files under specific paths, collects image files, and stores the unique files in a "collections" folder. The Collector function is a part of a "Photo Manager" utility that further processes the collected files. As development of other parts of the PhotoManager evolve, those parts may be incorporated into a single application, but that is yet to be determined.</p>
+    <h2 id="background">Background</h2>
+    <p>In my environment, I have photo and video files scattered in various systems and media. Often, that scattering is more of a redistribution of files from one form to another, without deletion of the source files. For example, Files are uploaded from a camera SD card to a PC storage, some files may be duplicated for whatever reason without change and placed in other folders, then folders of files are automatically uploaded to the cloud (Google photo storage or Apple cloud)--later, those cloud files are brought back to earth in another PC folder. Thus, a file can be found on many folders on several PCs.</p>
+    <p>Another wrinkle in the scattering of photos is that many have been placed into folders named for a date and/or a activity.</p>
+    <h2 id="essential-requirements">Essential Requirements</h2>
+    <p>The goal of this project is to locate the files on PCs. This program is merely a collector--it is not intended for the program to delete any files. Several lists are to be generated which will be used by the next program in the Photo Manager utility:</p>
+    <ul>
+      <li>A list of all files, with full paths, that are unique. Other critical information regarding the files may be retained in the list.</li>
+      <li>A list of all files, with full paths, that are duplicates of unique files.</li>
+    </ul>
+    <p>Other mandatory requirements are:</p>
+    <ul>
+      <li>By default, JPG, PNG, JPEG, MP4, and MOV files are to be processed. An option should be available to select specific types.</li>
+      <li>Files may be found in archives, such as ZIP or 7Z type files.</li>
+      <li>Duplication of a file is identified as two or more files having identical content, regardless of containing folder names, file names, or file timestamps.</li>
+      <li>Information is to be collected once. Examples:
+<ul><li>If a file is read to check for duplication, a hash value should be retained so that tha file does not need to be reread to check again for duplication.</li><li>If EXIF information is required, it is read once, preferrably from the same data block read to obtain hash value, and retained.</li></ul></li>
+      <li>When the program is rerun, the same lists as collected before are updated with newly found files. An option is required to start with a fresh collection.</li>
+    </ul>
+    <h2 id="development-approach">Development Approach</h2>
+    <p>The development of the Photo Collector program ("COL") will be performed in stages, where each stage generally follows a process listed below. Since only one person is involved, some typical concepts of Agile may not be followed precisely.</p>
+    <ul>
+      <li>Specification of the stage requirements and detailed design</li>
+      <li>Test-driven development</li>
+      <li>Implementation of the stage</li>
+      <li>Archival of source to github</li>
+    </ul>
+    <h2 id="requirements-analysis">Requirements Analysis</h2>
+    <ul>
+      <li>
+        <p>Requirements derived from essential requirements</p>
+        <ul>
+          <li>The program uses command line options and arguments for operation</li>
+          <li>A single folder is designated as the collection site</li>
+          <li>One or more paths must be specified on the command line as the source of files</li>
+          <li>Source paths may include references to remote file systems, through drive letter mapped to another computer or Universal Naming Convention (UNC)</li>
+          <li>A source path may include a date or activity indication. For examples:
+<ul><li>C:\Pix\202110_</li><li>C:\FlashImage\Photos\MiscPhotos.zip\Hillsboro 09</li></ul></li>
+        </ul>
+      </li>
+      <li>
+        <p>Presumed requirements and conditions</p>
+        <ul>
+          <li>All operations are performed on a PC with a Windows OS. Linux operation is a possibility but not explored at this time.</li>
+          <li>Operations will be fast enough such that Python is adequate for the application.</li>
+          <li>The PC has sufficient memory to support large amount of file information.</li>
+        </ul>
+      </li>
+    </ul>
+    <h2 id="stage-0-general-planning">Stage 0 -- General Planning</h2>
+    <ul>
+      <li>Each stage of development is expected to take only a few hours or a day, since only one person is doing all work.</li>
+      <li>A TDD approach is used in testing stages of development.</li>
+      <li>Development of source and tests is in Python</li>
+      <li>Python "unittest" is used in test module and test case development</li>
+      <li>The expectation is that only one test module is developed for the testing of the PhotoCollector program; each stage adds test cases.</li>
+      <li>The test module will setup its testing environment from scratch (i.e., no reliance on previous setup).</li>
+      <li>A github repository is used to hold developed sources: <a href="https://github.com/syntheny/PhotoManager">https://github.com/syntheny/PhotoManager</a></li>
+      <li>The end of each stage will assure the source and tests are committed to the repository, using the "Stage_number_stage_title" as the branch name.</li>
+      <li>Stages as expected at kick-off:
+<ol><li>Handling PhotoCollector as both a library and program</li><li>Command line parsing for path argument</li><li>Finding files</li><li>Collecting file information</li><li>Identifying duplicate files</li></ol></li>
+      <li>The general format of each stage description is as follows (empty sections can be omitted):</li>
+    </ul>
+    <pre>
+      <code>        ## Stage N -- title
+        * Stage description/summary points
+        ### Stage Preparation
+        * Specify any instructions with respect to development, such as 
+          one-time-only generation of test data which is added to the repository.
+        ### Test Setup
+        * Itemized list of what needs to be set up for the stage
+        * Note that a stage is an addition of test cases to existing 
+          test cases from previous stages, so setup can be additive.
+        ### Test Cases
+        * Itemized test cases
+            - For each test case, indicate the expected result, 
+              unless it is obvious
+        * Note that Python unittest will reorder test cases, based on name, 
+          so a test case cannot rely on another test case behaviour.
+        ### Test Teardown
+        * Clean up interim states
+        * But do not remove artifacts from testing that might help in 
+          diagnosing problems
+        ### Test Results
+        * Do not actually add test results here, but use this markdown link, keyed to the stage number:
+            [Stage N Test Results](TestResults/stageN.md)
+        * Create a "stageN.md" text file under TestResults folder to report testing results for stage N
+</code>
+    </pre>
+    <ul>
+      <li>When a test/development stage is complete, create a separate reporting file, with the stage number in the name, under "TestResults" folder in the repository. This file and related files generated during testing should be included when the stage branch is checked in.</li>
+      <li>Information to include in the rest results report file are:
+<ul><li>Report approximate time to develop and test this stage</li><li>Report any note-worthy results from succcessful testing</li><li>Keep any test reports of intermittent failure (also report through Jira)</li></ul></li>
+    </ul>
+    <h2 id="stage-1-structure-of-photocollector">Stage 1 -- Structure of PhotoCollector</h2>
+    <ul>
+      <li>This stage allows the development of the PhotoCollector (COL) source structure on which all other test cases are based.</li>
+      <li>This stage also allows the exploration of how to test COL, including setup of test environment that may be required for each stage.</li>
+      <li>The COL module is expected to be both an import as a library and callable as a system program.</li>
+      <li>What is expected is that a command line parsing scheme is developed (testing of the parsing is performed in another test stage).</li>
+    </ul>
+    <h3 id="test-cases">Test Cases</h3>
+    <ol>
+      <li>Import PhotoCollector library</li>
+      <li>Import PhotoCollector library and create instance of related object</li>
+      <li>Use Python subprocess call methods to invoke PhotoCollector as an application</li>
+    </ol>
+    <h2 id="stage-2-command-line">Stage 2 -- Command line</h2>
+    <ul>
+      <li>This stage is not concerned with command line options, except one or more arguments to specify folder paths.</li>
+      <li>It tests the ability of the program to locate photo files in one or more existing folders, including nested folders.</li>
+      <li>This stage is not concerned with file content, only the file extension as it indicates an image or video file.</li>
+      <li>Because the collect.py may be either an imported library or a free-standing program, the command line test cases must cover both modes.</li>
+    </ul>
+    <h3 id="stage-preparation">Stage Preparation</h3>
+    <ul>
+      <li>Create a TestData folder under the repository and add image files and video files. Names should indicate size and other relevant image characteristics.</li>
+    </ul>
+    <h3 id="test-setup">Test Setup</h3>
+    <ul>
+      <li>Create folders and copy existing files from testData into folders, as directed below:
+<ol><li>Folder C:\Photo\Tests\test_folder0 -- empty</li><li>Folder C:\Photo\Tests\test_folder1 -- contains one file with ".txt" extension</li><li>Folder C:\Photo\Tests\test_folder2 -- contains one file with ".jpg" suffix</li><li>Folder C:\Photo\Tests\test_folder3 -- contains multiple files with all supported extensions</li><li>Folder C:\Photo\Tests\test_folder4 -- contains multiple files with all supported extensions; also contains a folder "subfolder" having multiple files of all supported extensions</li></ol></li>
+    </ul>
+    <h3 id="test-cases-1">Test Cases</h3>
+    <p>The following test cases have two variations: passig the command line to the imported library and to a free-standing program. A "common test case" scheme is used whereby a test case for library mode and a test case for program mode call upon a common method to perform the test.</p>
+    <ul>
+      <li>Common test cases</li>
+      <li>Command line: no arguments
+<ul><li>expect in-and-out, no failure</li></ul></li>
+      <li>Command line: one valid folder path</li>
+      <li>Command line: one invalid folder path</li>
+      <li>Command line: one valid file path for existing file</li>
+      <li>Command line: one invalid file path (non-existent file)</li>
+      <li>Command line: multiple valid folder paths</li>
+      <li>Command line: multiple valid folder and file paths</li>
+    </ul>
+    <h2 id="stage-3-finding-files">Stage 3 -- Finding Files</h2>
+    <h3 id="tdd-design">TDD Design</h3>
+    <ul>
+      <li>This stage is not concerned with command line options, except one or more arguments to specify folder paths.</li>
+      <li>It tests the ability of the program to locate photo files in one or more existing folders, including nested folders.</li>
+      <li>This stage is not concerned with file content, only the file extension as it indicates an image or video file.</li>
+    </ul>
+    <h4 id="test-setup-1">Test Setup</h4>
+    <ul>
+      <li>Create folders and copy existing files into folders, as directed below:
+<ol><li>Folder C:\Photo\Tests\test_folder0 -- empty</li><li>Folder C:\Photo\Tests\test_folder1 -- contains one file with ".txt" extension</li><li>Folder C:\Photo\Tests\test_folder2 -- contains one file with ".jpg" suffix</li><li>Folder C:\Photo\Tests\test_folder3 -- contains multiple files with all supported extensions</li><li>Folder C:\Photo\Tests\test_folder4 -- contains multiple files with all supported extensions; also contains a folder "subfolder" having multiple files of all supported extensions</li></ol></li>
+    </ul>
+    <h4 id="test-cases-2">Test Cases</h4>
+    <ul>
+      <li>Command line: no arguments
+<ul><li>expect in-and-out, no failure</li></ul></li>
+      <li>Command line: one valid folder path</li>
+      <li>Command line: one invalid folder path</li>
+      <li>Command line: one valid file path for existing file</li>
+      <li>Command line: one invalid file path (non-existent file)</li>
+      <li>Command line: multiple valid folder paths</li>
+      <li>Command line: multiple valid folder and file paths</li>
+    </ul>
+  </body>
+</html>

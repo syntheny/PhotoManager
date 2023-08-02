@@ -1,0 +1,32 @@
+c:\Projects\PhotoManager>python3 test_collect.py
+test_collector_library (test_collect.Test1_CollectStructure.test_collector_library) ... ok
+test_collector_import_class (test_collect.Test1_CollectStructure.test_collector_import_class) ... ok
+test_collector_program (test_collect.Test1_CollectStructure.test_collector_program) ... ok
+test_all_folders (test_collect.Test2_CommonSetup.test_all_folders) ... ok
+test_folder1 (test_collect.Test2_CommonSetup.test_folder1) ... ok
+test_folder2 (test_collect.Test2_CommonSetup.test_folder2) ... ok
+test_folder3 (test_collect.Test2_CommonSetup.test_folder3) ... ok
+test_folder4 (test_collect.Test2_CommonSetup.test_folder4) ... ok
+test_folder5 (test_collect.Test2_CommonSetup.test_folder5) ... ok
+test_folder6 (test_collect.Test2_CommonSetup.test_folder6) ... ok
+test_empty (test_collect.Test3_Collection.test_empty) ... ok
+test_folder1 (test_collect.Test3_Collection.test_folder1) ... ok
+test_folder2_any_file (test_collect.Test3_Collection.test_folder2_any_file) ... ok
+test_folder2_photo (test_collect.Test3_Collection.test_folder2_photo) ... ok
+test_folder2_text_file (test_collect.Test3_Collection.test_folder2_text_file) ... ok
+test_folder3_any_file (test_collect.Test3_Collection.test_folder3_any_file) ... ok
+test_folder3_photo (test_collect.Test3_Collection.test_folder3_photo) ... ok
+test_folder3_text_file (test_collect.Test3_Collection.test_folder3_text_file) ... ok
+test_folder4_no_image (test_collect.Test3_Collection.test_folder4_no_image) ... ok
+test_folder4_any_file (test_collect.Test3_Collection.test_folder4_any_file) ... ok
+test_folder4_photo (test_collect.Test3_Collection.test_folder4_photo) ... ok
+test_folder4_text_file (test_collect.Test3_Collection.test_folder4_text_file) ... ok
+test_folder5rec_no_image (test_collect.Test3_Collection.test_folder5rec_no_image) ... ok
+test_folder5rec_any_file (test_collect.Test3_Collection.test_folder5rec_any_file) ... ok
+test_folder5rec_photo (test_collect.Test3_Collection.test_folder5rec_photo) ... ok
+test_folder5rec_text_file (test_collect.Test3_Collection.test_folder5rec_text_file) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.237s
+
+OK
