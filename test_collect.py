@@ -9,9 +9,23 @@ import shutil
 from singleton_decorator import singleton
 import subprocess
 import sys
+import time
 import unittest
 
-sys.path.append('')
+# The "tools.py" library module is maintained under a Tools repository. However, it also needs to
+# be copied into this project repository so that its current state can be committed to the
+# project repository.
+# if 'tools' not in sys.modules:
+#     if 'Tools' not in sys.path:
+#         tool_repo = os.path.join('..', '..', 'Tools', 'lib')
+#         sys.path.append(tool_repo)
+#         from tools import sync_modules
+#         sync_modules({tool_repo: 'tools.py'})
+
+# Note: Due to the nature of the Python unittest design, this source module gets imported
+# multiple times, the fist time to get started, then once again for each for class in the source.
+# For that reason, any work at the global file scope level must be kept to a minimum and should
+# not vary during those imports.
 from tools import (chdir, make_folder, replicate, SingletonPattern, rewire_unittest,
                    File,
                    C_ROOT, PROGRAM_ABS_DIR, PROGRAM_NAME, IS_WINDOWS)
@@ -24,7 +38,11 @@ IMAGE_TYPES = ('.jpg', '.png', '.bmp', '.tif', '.jpeg')
 TEST_SRC = os.path.join(PROGRAM_ABS_DIR, 'TestData')
 
 # Test directory to which test files are copied
-TEST_DIR = os.path.join(C_ROOT, 'Photos', 'Test')
+TEST_ROOT = os.path.join(C_ROOT, 'PhotoMgrTesting')
+TEST_DIR = os.path.join(TEST_ROOT, 'Test')
+
+# Archive extraction folder
+EXTRACTION_DIR = os.path.join(TEST_ROOT, 'Extract')
 
 UNITTEST_VERBOSITY = 2
 
@@ -159,6 +177,11 @@ class CommonTest(unittest.TestCase, TestData):
     def setUpClass(cls):
         cls.common = Common()
         replicate(cls.common, cls)
+
+        # If a specific child class needs futher class-level setup, an "extraSetUpClass" method
+        # can be defined to perform the extra work
+        if extraSetUpClass := getattr(cls, 'extraSetUpClass', None):
+            extraSetUpClass()
 
 
 class Test1_CollectStructure(CommonTest):
@@ -343,7 +366,43 @@ class Test3_Collection(CommonTest):
         self.assertEqual(len(collection.files), 2, self.unexpected)
 
 
-class Test4_CommandLine(CommonTest):
+def create_archives():
+    """Create several archive files in TestData using files in TestData"""
+
+    # Create zip file
+
+class Test4_ZipExtraction(CommonTest):
+
+    archive_files: {str: str} = {}
+
+    @classmethod
+    def extraSetUpClass(cls):
+        """Locate archive files"""
+        with chdir(TEST_SRC):
+            for item in os.listdir():
+                if item.endswith('7z'):
+                    cls.archive_files['7z'] = os.path.join(TEST_SRC, item)
+                elif item.endswith('zip'):
+                    cls.archive_files['zip'] = os.path.join(TEST_SRC, item)
+                elif item.endswith('gz'):
+                    cls.archive_files['gz'] = os.path.join(TEST_SRC, item)
+
+        # Create extraction folder
+        os.makedirs(EXTRACTION_DIR, exist_ok=True)
+
+    def test_archives_available(self):
+        self.assertNotEqual(len(self.archive_files), 0, f"No archive found in {TEST_SRC}")
+
+    def test_zip_archive(self):
+        collect = Collect(self.archive_files['zip'], extract=EXTRACTION_DIR, exts=IMAGE_TYPES)
+        self.assertNotEqual(len(collect.files), 0)
+
+
+class Test5_ExploreVolumes(CommonTest):
+    pass
+
+
+class Test99_CommandLine(CommonTest):
     """
     Test command line options
 
